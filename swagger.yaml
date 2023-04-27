@@ -1,0 +1,29 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: Pinata Upload API
+paths:
+  /pinata/upload:
+    post:
+      summary: Upload a file to Pinata
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - name: file
+          in: formData
+          type: file
+          required: true
+      responses:
+        "200":
+          description: Successful response
+          schema:
+            type: object
+            properties:
+              IpfsHash:
+                type: string
+              PinSize:
+                type: integer
+              Timestamp:
+                type: string
