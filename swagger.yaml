@@ -27,3 +27,56 @@ paths:
                 type: integer
               Timestamp:
                 type: string
+  /pinata/metadata:
+    post:
+      summary: Upload metadata to Pinata IPFS
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: user
+          description: The user to create.
+          schema:
+            type: object
+            required:
+              - name
+            properties:
+              name:
+                type: string
+              image:
+                type: string
+              ipfsHash:
+                type: string
+              price:
+                type: number
+              description:
+                type: string
+              category:
+                type: string
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      pinataUrl:
+                        type: string
+                        description: URL of the pinned metadata on IPFS
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  errors:
+                    type: object

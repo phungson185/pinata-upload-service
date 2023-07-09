@@ -7,6 +7,8 @@ const fs = require("fs");
 const os = require("os");
 
 const app = express();
+app.use(express.json());
+
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
@@ -37,6 +39,39 @@ app.post("/pinata/upload", upload.single("file"), async (req, res) => {
       },
     };
     const result = await pinata.pinFileToIPFS(readStream, options);
+    res.json({
+      success: true,
+      data: {
+        pinataUrl: `https://gateway.pinata.cloud/ipfs/${result.IpfsHash}`,
+      },
+    });
+  } catch (err) {
+    res.json({
+      success: false,
+      errors: err,
+    });
+  }
+});
+
+// const data = {
+//   name: `A custom name. If you don't provide this value, it will automatically be populated by the original name of the file you've uploaded`,
+//   keyvalues: {
+//     customKey: "customValue",
+//     customKey2: "customValue2",
+//   },
+// };
+
+app.post("/pinata/metadata", async (req, res) => {
+  try {
+    console.log("req.body", req.body);
+    const metadata = req.body;
+    const options = {
+      pinataMetadata: metadata,
+      pinataOptions: {
+        cidVersion: 0,
+      },
+    };
+    const result = await pinata.pinJSONToIPFS(metadata, options);
     res.json({
       success: true,
       data: {
